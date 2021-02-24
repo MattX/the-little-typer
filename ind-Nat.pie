@@ -140,3 +140,41 @@
        (r Nat))
     (-> (Vec E (+ k r)) (Vec E r))))
 
+(claim mot-drop-last-k
+  (-> U Nat Nat U))
+
+(define mot-drop-last-k
+  (lambda (E r k)
+    (-> (Vec E (+ k r)) (Vec E r))))
+
+(claim base-drop-last-k
+  (Pi ((E U) (r Nat))
+    (mot-drop-last-k E r 0)))
+
+(define base-drop-last-k
+  (lambda (E r)
+    (lambda (v) v)))
+
+(claim step-drop-last-k
+  (Pi ((E U) (r Nat) (k Nat))
+    (->
+     (mot-drop-last-k E r k)
+     (mot-drop-last-k E r (add1 k)))))
+
+(define step-drop-last-k
+  (lambda (E r k)
+    (lambda (drop_k-1)
+      (lambda (v)
+        (drop_k-1 (tail v))))))
+
+(define drop-last-k
+  (lambda (E k r)
+    (ind-Nat k
+      (mot-drop-last-k E r)
+      (base-drop-last-k E r)
+      (step-drop-last-k E r))))
+
+(check-same (Vec Atom 3)
+  (vec:: 'this (vec:: 'stays (vec:: 'here vecnil)))
+  (drop-last-k Atom 2 3
+    (vec:: 'this (vec:: 'goes (vec:: 'this (vec:: 'stays (vec:: 'here vecnil)))))))
