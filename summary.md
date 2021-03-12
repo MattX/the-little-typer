@@ -96,5 +96,23 @@ The law of Π is
 
 → is just syntactic sugar for Π: specifically, (→ _Y_ _X_) is a shorter way of writing (Π ((_y_ _Y_)) _X_) if _y_ is not used in _X_.
 
+## Chapter 7
 
+`ind-Nat` is like `rec-Nat`, but lets you specify a motive, that is, a type that depends on `n` for the returned expression.
 
+* (ind-Nat zero _mot base step_) is the same (_mot_ zero) as _base_.
+* (ind-Nat (add1 _n_) _mot base step_) and (_step_ _n_ (ind-Nat _n mot base step_)) are the same (_mot_ (add1 _n_)).
+
+ind-Nat lets us perform _induction on natural numbers_.
+
+## Chapter 8
+
+More dependent types! First, =. An (= _X from to_) is a type if _X_ is a type, _from_ is an _X_, and _to_ is an _X_. _from_ and _to_ are called the "from" and the "to" of the =-expression, unsurprisingly.
+
+How do we build an =? (same _e_) is an (= _X e e_) if _e_ is an _X_.
+
+We also get a more precise definition of neutral expressions: variables that are not `define`d are neutral, and if the target of an eliminator is neutral, then the eliminator expression is neutral. (But every expression that contains a variable need not be neutral).
+
+We can interpret function types as conditional statements: (→ _X Y_) can be read as "if _X_ then _Y_"; the function tells us how to turn a value of type _X_, i.e. a proof of _X_, into a proof of _Y_.
+
+Once we have a same-expression, we can make a new one with cong. If _f_ is an (→ _X Y_), and _target_ is an (= _X from to_), then (cong _target f_) is an (= _Y_ (_f from_) (_f to_)). If additonally _x_ is an _X_, (cong (same _x_) _f_) is the same (= _Y_ (_f x_) (_f x_)) as (same (_f x_)).
